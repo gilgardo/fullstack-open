@@ -1,0 +1,12 @@
+
+sequenceDiagram
+    title exercise 0.6
+    participant browser
+    participant server
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa<br/>Payload: {content: string, date: date}
+    activate server
+    server-->>browser: HTTP 201 Created<br/>Response: {"message":"note created"}
+    deactivate server
+    
+    Note over browser,server: The difference with the traditional website exaple is that submitting the form<br/>don't cause a reload.<br/>In this case the new note is directly added to the DOM in the client.
