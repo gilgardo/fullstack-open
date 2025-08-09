@@ -1,10 +1,10 @@
+import Part from "./Part";
+
 const Content = ({ parts }) => {
   return (
     <>
-      {parts.map(({ title, exercises }) => (
-        <p key={title}>
-          {title} {exercises}
-        </p>
+      {parts.map(({ name, exercises }) => (
+        <Part key={name} name={name} exercises={exercises} />
       ))}
     </>
   );
