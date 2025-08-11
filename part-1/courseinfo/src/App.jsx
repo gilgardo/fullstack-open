@@ -13,6 +13,7 @@ const App = () => {
   };
 
   const { name, parts } = course;
+
   const totExercises = parts.reduce(
     (tot, current) => tot + current.exercises,
     0
