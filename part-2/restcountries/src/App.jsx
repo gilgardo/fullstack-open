@@ -44,7 +44,7 @@ function App() {
   const handleChange = (e) => {
     setSearch(e.target.value);
     const filtered = filterCountries(e.target.value);
-    if (filtered && filtered.length !== 1 && (countries || weather)) {
+    if (filtered && filtered.length !== 1) {
       setCountry(null);
       setWeather(null);
       return;
