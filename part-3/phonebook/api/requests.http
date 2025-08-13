@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:3001
+@personsUrl = http://localhost:3001/api/persons
+### Get all persons
+GET {{personsUrl}}
+
+### Get info
+GET {{baseUrl}}/info
+
+### Get person
+GET {{personsUrl}}/1
+
+### Delete person
+DELETE  {{personsUrl}}/2
+
+### POST person
+POST  {{personsUrl}}
+Content-Type: application/json
+
+{
+  "name": "Luca",
+  "number": "123-456-789"
+}
