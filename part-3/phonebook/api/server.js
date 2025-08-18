@@ -44,14 +44,14 @@ app.get("/info", (request, response) => {
     </div>`);
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/persons/:id", (request, response) => {
   const { id } = request.params;
   const data = persons.find((person) => person.id === id);
   if (!data) return response.status(404).json({ error: "person not found" });
   response.json(data);
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/persons/:id", (request, response) => {
   const { id } = request.params;
   const deleted = persons.find((person) => person.id === id);
   if (!deleted) return response.status(404).json({ error: "person not found" });
@@ -59,7 +59,7 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/persons", (request, response) => {
   const data = request.body;
   if (!data || !data.number || !data.name)
     return response.status(400).json({ error: "missing data in the request" });
