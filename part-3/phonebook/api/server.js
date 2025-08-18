@@ -1,16 +1,14 @@
 import express from "express";
 import mockPersons from "./data.js";
 import morgan from "morgan";
-import cors from "cors";
 import "dotenv/config";
 
 let persons = [...mockPersons];
-const FRONTEND_ORIGIN = "http://localhost:5173";
+
 const PORT = process.env.PORT || 3001;
 const generateId = () => Math.floor(Math.random() * 1000000).toString();
 
 const app = express();
-app.use(cors({ origin: FRONTEND_ORIGIN }));
 app.use(express.static("dist"));
 app.use(express.json());
 

@@ -30,6 +30,7 @@ const App = () => {
           "Failed to load the contacts",
           setSuccessMessage
         );
+        setPersons([]);
       });
   }, []);
 
