@@ -19,8 +19,8 @@ const deletePerson = async (id) => {
   return response.data;
 };
 
-const update = async (id, newObject) => {
-  const res = await axios.put(`${baseUrl}/${id}`, newObject);
+const update = async (id, numberObj) => {
+  const res = await axios.put(`${baseUrl}/${id}`, numberObj);
   return res.data;
 };
 

@@ -2,6 +2,7 @@
 
 This project is part of the **Fullstack Open course (Part 3)**.  
 It is a basic exercise demonstrating the integration of a **React frontend** with an **Express backend**, including deployment.
+Exercise 3.12 is on the mongo.js file
 
 ---
 

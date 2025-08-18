@@ -70,7 +70,7 @@ const App = () => {
 
   const savePerson = async (person, isUpdate) => {
     const saved = isUpdate
-      ? await personsService.update(person.id, person)
+      ? await personsService.update(person.id, { number: person.number })
       : await personsService.create(person);
     console.log(saved);
     setPersons((prev) =>
