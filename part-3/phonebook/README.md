@@ -1,12 +1,29 @@
-# React + Vite
+# Phonebook Exercise (Fullstack Open - Part 3)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is part of the **Fullstack Open course (Part 3)**.  
+It is a basic exercise demonstrating the integration of a **React frontend** with an **Express backend**, including deployment.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Structure
 
-## Expanding the ESLint configuration
+- **Frontend:** React + Vite
+- **Backend:** Express
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Features
+
+- View all contacts
+- Add a new contact (name must be unique)
+- Delete a contact
+- Filter contacts with a search query
+- Info page showing total number of contacts and current date/time
+
+---
+
+## Deployment
+
+The project is deployed on **Render**. You can access it here:
+
+[Phonebook App on Render](https://fullstack-open-zava.onrender.com)
