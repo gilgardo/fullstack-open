@@ -110,12 +110,6 @@ app.put("/api/persons/:id", async (request, response, next) => {
   const { id } = request.params;
   const { number } = request.body;
 
-  if (!number) {
-    return response
-      .status(400)
-      .json({ message: "missing data in the request" });
-  }
-
   try {
     const updatedPerson = await Person.findByIdAndUpdate(
       id,
@@ -135,10 +129,6 @@ app.put("/api/persons/:id", async (request, response, next) => {
 
 app.post("/api/persons/", async (request, response, next) => {
   const { name, number } = request.body;
-  if (!name || !number)
-    return response
-      .status(400)
-      .json({ message: "missing data in the request" });
   const person = new Person({ name, number });
 
   try {

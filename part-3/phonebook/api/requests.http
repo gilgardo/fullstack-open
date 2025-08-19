@@ -18,5 +18,5 @@ Content-Type: application/json
 
 {
   "name": "Luca",
-  "number": "123-456-789"
+  "number": "123-456789"
 }

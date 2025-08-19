@@ -11,6 +11,10 @@ const setMessage = (setter, message, clearOtherSetter) => {
   setTimeout(() => setter(null), 5000);
 };
 
+const getErrorMessage = (error, fallback) => {
+  return error?.response?.data.message ?? fallback;
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -106,7 +110,10 @@ const App = () => {
       console.error(error);
       setMessage(
         setErrorMessage,
-        "Something went wrong while saving the contact.",
+        getErrorMessage(
+          error,
+          "Something went wrong while saving the contact."
+        ),
         setSuccessMessage
       );
     }
