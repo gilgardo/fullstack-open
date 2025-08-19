@@ -90,7 +90,6 @@ app.post("/api/persons", (request, response) => {
   if (!isNameUnique)
   return response.status(400).json({ error: "name must be unique" });
   persons = persons.concat({ ...data, id });
-  
   response.status(201).json({ ...data, id });
 });
 */
