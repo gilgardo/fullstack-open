@@ -9,7 +9,7 @@ describe('author with most likes', () => {
   test('of empty list is null', () => {
     assert.equal(mostLikes([]), null)
   })
-  test('of a bigger list return a obj with the form: {author:<author with most blogs>, blogs:<nr of blogs>}', () => {
+  test('of a bigger list return a obj with the form: {author:<author with most likes>, likes:<nr of likes>}', () => {
     assert.deepStrictEqual(mostLikes(blogs), {
       author: 'Edsger W. Dijkstra',
       likes: 17,

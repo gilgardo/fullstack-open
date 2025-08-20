@@ -7,16 +7,14 @@ import blogsRouter from './controllers/blogs.js'
 
 const app = express()
 
-logger.info('connecting to', config.MONGODB_URI)
-
-mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.error('error connection to MongoDB:', error.message)
-  })
+try {
+  logger.info('connecting to', config.MONGODB_URI)
+  await mongoose.connect(config.MONGODB_URI)
+  logger.info('connected to MongoDB')
+} catch (error) {
+  logger.error('error connection to MongoDB:', error.message)
+  process.exit(1)
+}
 
 app.use(express.static('dist'))
 app.use(express.json())
