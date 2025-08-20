@@ -1,8 +1,8 @@
 const Persons = ({ persons, handleDelete }) => {
   const handleConfirm = (id, name) => {
-    if (!window.confirm(`Delete ${name}?`)) return;
-    handleDelete(id, name);
-  };
+    if (!window.confirm(`Delete ${name}?`)) return
+    handleDelete(id, name)
+  }
   return (
     <table>
       <tbody>
@@ -19,6 +19,6 @@ const Persons = ({ persons, handleDelete }) => {
         ))}
       </tbody>
     </table>
-  );
-};
-export default Persons;
+  )
+}
+export default Persons

@@ -33,6 +33,6 @@ const Form = ({ newName, newNumber, handleChange, handleSubmit }) => {
         <button type="submit">add</button>
       </div>
     </form>
-  );
-};
-export default Form;
+  )
+}
+export default Form

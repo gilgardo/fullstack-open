@@ -1,0 +1,15 @@
+@baseUrl = http://localhost:3001/api/blogs
+
+### Get all persons
+GET {{baseUrl}}
+
+### POST person
+POST  {{baseUrl}}
+Content-Type: application/json
+
+{
+  "title": "i like linux",
+  "author": "linus",
+  "url": "http://localhost:3001/api/blogs",
+  "likes": 4
+}

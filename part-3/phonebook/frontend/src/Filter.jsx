@@ -1,10 +1,10 @@
 const Filter = ({ filter, handleChange }) => {
   return (
     <div>
-      filter shown with :{" "}
+      filter shown with :{' '}
       <input name="filter" type="text" value={filter} onChange={handleChange} />
     </div>
-  );
-};
+  )
+}
 
-export default Filter;
+export default Filter

@@ -1,63 +1,63 @@
 // Commented lines for exercises before 3.12
 
-import express from "express";
+import express from 'express'
 // import mockPersons from "./data.js";
-import morgan from "morgan";
-import "dotenv/config";
-import Person from "./mongoConfig.js";
+import morgan from 'morgan'
+import 'dotenv/config'
+import Person from './mongoConfig.js'
 
 // let persons = [...mockPersons];
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001
 // const generateId = () => Math.floor(Math.random() * 1000000).toString();
 
-const app = express();
-app.use(express.static("dist"));
-app.use(express.json());
+const app = express()
+app.use(express.static('dist'))
+app.use(express.json())
 
-morgan.token("body", (req) =>
-  req.method === "POST" ? JSON.stringify(req.body) : ""
-);
+morgan.token('body', (req) =>
+  req.method === 'POST' ? JSON.stringify(req.body) : ''
+)
 
 const logger = morgan((tokens, req, res) =>
   [
     tokens.method(req, res),
     tokens.url(req, res),
     tokens.status(req, res),
-    tokens.res(req, res, "content-length"),
-    "-",
-    tokens["response-time"](req, res),
-    "ms",
+    tokens.res(req, res, 'content-length'),
+    '-',
+    tokens['response-time'](req, res),
+    'ms',
     tokens.body(req, res),
-  ].join(" ")
-);
+  ].join(' ')
+)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.error(error.message)
 
-  if (error.name === "CastError") {
-    return response.status(400).send({ message: "malformatted id" });
-  } else if (error.name === "ValidationError") {
-    return response.status(400).json({ message: error.message });
+  if (error.name === 'CastError') {
+    return response.status(400).send({ message: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ message: error.message })
   }
 
-  next(error);
-};
+  next(error)
+}
 
-app.use(logger);
+app.use(logger)
 
-app.get("/info", async (request, response, next) => {
+app.get('/info', async (request, response, next) => {
   try {
-    const count = await Person.countDocuments({});
-    const date = new Date();
+    const count = await Person.countDocuments({})
+    const date = new Date()
     response.send(`<div>
       <div>Phonebook has info for ${count} people</div>
       <div>${date.toString()}</div>
-      </div>`);
+      </div>`)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
 /*
 Exercises till 3.11
@@ -96,63 +96,63 @@ app.post("/api/persons", (request, response) => {
 
 // Exercises from 3.13
 
-app.get("/api/persons", async (request, response, next) => {
+app.get('/api/persons', async (request, response, next) => {
   try {
-    const persons = await Person.find({});
-    response.json(persons);
+    const persons = await Person.find({})
+    response.json(persons)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-app.put("/api/persons/:id", async (request, response, next) => {
-  const { id } = request.params;
-  const { number } = request.body;
+app.put('/api/persons/:id', async (request, response, next) => {
+  const { id } = request.params
+  const { number } = request.body
 
   try {
     const updatedPerson = await Person.findByIdAndUpdate(
       id,
       { number },
-      { new: true, runValidators: true, context: "query" }
-    );
+      { new: true, runValidators: true, context: 'query' }
+    )
 
     if (!updatedPerson) {
-      return response.status(404).json({ message: "person not found" });
+      return response.status(404).json({ message: 'person not found' })
     }
 
-    response.status(200).json(updatedPerson);
+    response.status(200).json(updatedPerson)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-app.post("/api/persons/", async (request, response, next) => {
-  const { name, number } = request.body;
-  const person = new Person({ name, number });
+app.post('/api/persons/', async (request, response, next) => {
+  const { name, number } = request.body
+  const person = new Person({ name, number })
 
   try {
-    const savedPerson = await person.save();
-    response.status(201).json(savedPerson);
+    const savedPerson = await person.save()
+    response.status(201).json(savedPerson)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-app.delete("/api/persons/:id", async (request, response, next) => {
-  const { id } = request.params;
+app.delete('/api/persons/:id', async (request, response, next) => {
+  const { id } = request.params
   try {
-    const result = await Person.findByIdAndDelete(id);
+    const result = await Person.findByIdAndDelete(id)
     if (result) {
-      return response.status(204).end();
+      return response.status(204).end()
     }
-    return response.status(404).json({ message: "person not found" });
+    return response.status(404).json({ message: 'person not found' })
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-app.use(errorHandler);
+app.use(errorHandler)
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})
