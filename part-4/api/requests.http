@@ -1,15 +1,50 @@
-@baseUrl = http://localhost:3001/api/blogs
+@blogsUrl = http://localhost:3001/api/blogs
+@usersUrl = http://localhost:3001/api/users
+@loginUrl = http://localhost:3001/api/login
 
-### Get all persons
-GET {{baseUrl}}
+### Get all users
+GET {{usersUrl}}
 
-### POST person
-POST  {{baseUrl}}
+
+### POST user
+POST  {{usersUrl}}
 Content-Type: application/json
+
+{
+  "username": "alex",
+  "name": "ale",
+  "password": "gino"
+}
+
+### Login
+POST {{loginUrl}}
+Content-Type: application/json
+
+{
+  "username": "alex",
+  "password": "gino"
+}
+
+### Get all blogs
+GET {{blogsUrl}}
+
+### POST blog, POST user first
+POST  {{blogsUrl}}
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZXgiLCJpZCI6IjY4YTc3NDhhZWI3Yjc4MzE4ZmU0ODYxNSIsImlhdCI6MTc1NTgwNDg1Nn0.BkIg74FWT7Xaf_o_fgTJoMf2Ams1tCxvMvzf1lZ7GKA
 
 {
   "title": "i like linux",
   "author": "linus",
   "url": "http://localhost:3001/api/blogs",
   "likes": 4
+}
+
+### PUT blog POST user first
+PUT  {{blogsUrl}}/68a774d5eb7b78318fe4861a
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZXgiLCJpZCI6IjY4YTc3NDhhZWI3Yjc4MzE4ZmU0ODYxNSIsImlhdCI6MTc1NTgwNDg1Nn0.BkIg74FWT7Xaf_o_fgTJoMf2Ams1tCxvMvzf1lZ7GKA
+
+{
+  "likes": 10
 }

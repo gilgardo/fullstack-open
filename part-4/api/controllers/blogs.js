@@ -1,48 +1,76 @@
 import { Router } from 'express'
 import Blog from '../models/blogs.js'
+import middleware from '../utils/middleware.js'
+
 const blogsRouter = Router()
 
-blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+blogsRouter.get('/', async (_, response) => {
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   return response.json(blogs)
 })
 
+blogsRouter.use(middleware.userExtractor)
+
 blogsRouter.post('/', async (request, response) => {
-  const { likes } = request.body
-  const blog = new Blog({ ...request.body, likes: likes ? likes : 0 })
-  const result = await blog.save()
-  return response.status(201).json(result)
+  const { title, author, url, likes } = request.body
+  const user = request.user
+  const blog = new Blog({
+    title,
+    author,
+    url,
+    user: user._id,
+    likes: likes ? likes : 0,
+  })
+  const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+
+  return response.status(201).json(savedBlog)
 })
 
 // Ex: 4.13
 blogsRouter.delete('/:id', async (request, response) => {
   const { id } = request.params
-  const result = await Blog.findByIdAndDelete(id)
-  if (result) {
-    return response.status(204).end()
+  const user = request.user
+  const targetBlog = await Blog.findById(id)
+
+  if (!targetBlog)
+    return response.status(404).json({ message: 'blog not found' })
+  if (targetBlog.user.toString() !== user._id.toString()) {
+    return response
+      .status(403)
+      .json({ error: 'not authorized to delete this blog' })
   }
-  return response.status(404).json({ message: 'blog not found' })
+  await targetBlog.deleteOne()
+  return response.status(204).end()
 })
 
 // Ex: 4.14
 blogsRouter.put('/:id', async (request, response) => {
   const { id } = request.params
   const { likes } = request.body
+  const user = request.user
 
-  if (!likes) {
-    return response.status(400).json({ message: 'no likes received' })
+  if (likes === undefined) {
+    return response.status(400).json({ error: 'no likes received' })
   }
 
-  const result = await Blog.findByIdAndUpdate(
-    id,
-    { likes },
-    { new: true, runValidators: true, context: 'query' }
-  )
-  if (!result) {
-    return response.status(404).json({ message: 'blog not found' })
+  const targetBlog = await Blog.findById(id)
+
+  if (!targetBlog) {
+    return response.status(404).json({ error: 'blog not found' })
   }
 
-  return response.status(200).json(result)
+  if (targetBlog.user.toString() !== user._id.toString()) {
+    return response
+      .status(403)
+      .json({ error: 'not authorized to update this blog' })
+  }
+
+  targetBlog.likes = likes
+  const updatedBlog = await targetBlog.save()
+
+  return response.status(200).json(updatedBlog)
 })
 
 export default blogsRouter

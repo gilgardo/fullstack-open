@@ -5,12 +5,15 @@ import supertest from 'supertest'
 import app from '../app.js'
 import initialBlogs from './initialBlogs.js'
 import helper from './api_helper.js'
+
 const BLOGS_URL = '/api/blogs'
 const api = supertest(app)
+let user
 
 beforeEach(async () => {
   await helper.resetDb()
-  await helper.initDb()
+  user = await helper.makeMockUser()
+  await helper.initDb(user)
 })
 
 describe('getting blogs', () => {
@@ -38,6 +41,7 @@ describe('getting blogs', () => {
 describe('posting blogs', () => {
   // Ex: 4.10
   test('a valid blog can be added ', async () => {
+    const blogsAtStart = await helper.blogsInDb()
     const newBlog = {
       title: 'Hello from test',
       author: 'Alessandro',
@@ -47,17 +51,35 @@ describe('posting blogs', () => {
 
     const response = await api
       .post(BLOGS_URL)
+      .set('Authorization', user.token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length, initialBlogs.length + 1)
-
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
     const isAdded = blogsAtEnd.some((blog) => blog.id === response.body.id)
     assert(isAdded)
   })
 
+  test('a blog without token return status code 401', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const newBlog = {
+      title: 'Hello from test',
+      author: 'Alessandro',
+      url: 'http://example.com/hello-from-test',
+      likes: 5,
+    }
+
+    await api
+      .post(BLOGS_URL)
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+  })
   // Ex: 4.11
 
   test('if the prop likes is missing the default is 0 ', async () => {
@@ -69,6 +91,7 @@ describe('posting blogs', () => {
 
     const response = await api
       .post(BLOGS_URL)
+      .set('Authorization', user.token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -94,9 +117,21 @@ describe('posting blogs', () => {
       likes: 5,
     }
 
-    await api.post(BLOGS_URL).send(emptyTitle).expect(400)
-    await api.post(BLOGS_URL).send(emptyUrl).expect(400)
-    await api.post(BLOGS_URL).send(emptyEvery).expect(400)
+    await api
+      .post(BLOGS_URL)
+      .set('Authorization', user.token)
+      .send(emptyTitle)
+      .expect(400)
+    await api
+      .post(BLOGS_URL)
+      .set('Authorization', user.token)
+      .send(emptyUrl)
+      .expect(400)
+    await api
+      .post(BLOGS_URL)
+      .set('Authorization', user.token)
+      .send(emptyEvery)
+      .expect(400)
   })
 })
 
@@ -107,7 +142,10 @@ describe('deletion of a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const idToDelete = blogsAtStart[0].id
 
-    await api.delete(`${BLOGS_URL}/${idToDelete}`).expect(204)
+    await api
+      .delete(`${BLOGS_URL}/${idToDelete}`)
+      .set('Authorization', user.token)
+      .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
@@ -120,7 +158,10 @@ describe('deletion of a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const nonExistingId = new mongoose.Types.ObjectId().toString()
 
-    await api.delete(`${BLOGS_URL}/${nonExistingId}`).expect(404)
+    await api
+      .delete(`${BLOGS_URL}/${nonExistingId}`)
+      .set('Authorization', user.token)
+      .expect(404)
 
     const blogsAtEnd = await helper.blogsInDb()
 
@@ -137,6 +178,7 @@ describe('updating a blog', () => {
     const newLikes = 5
     const response = await api
       .put(`${BLOGS_URL}/${idToUpdate}`)
+      .set('Authorization', user.token)
       .send({ likes: newLikes })
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -148,13 +190,18 @@ describe('updating a blog', () => {
     const newLikes = 5
     await api
       .put(`${BLOGS_URL}/${nonExistingId}`)
+      .set('Authorization', user.token)
       .send({ likes: newLikes })
       .expect(404)
   })
   test('status code 400 if the body is empty', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const idToUpdate = blogsAtStart[0].id
-    await api.put(`${BLOGS_URL}/${idToUpdate}`).send({}).expect(400)
+    await api
+      .put(`${BLOGS_URL}/${idToUpdate}`)
+      .set('Authorization', user.token)
+      .send({})
+      .expect(400)
   })
 })
 
