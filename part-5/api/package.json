@@ -1,0 +1,34 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "mongo:up": "docker compose up -d mongo",
+    "mongo:down": "docker compose down",
+    "test": "npm run mongo:up && wait-on tcp:27017 && cross-env NODE_ENV=test node --test --test-concurrency=1 && npm run mongo:down",
+    "lint": "eslint ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@stylistic/eslint-plugin": "^5.2.3",
+    "eslint": "^9.33.0",
+    "globals": "^16.3.0",
+    "supertest": "^7.1.4",
+    "wait-on": "^8.0.4"
+  }
+}
