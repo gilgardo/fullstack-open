@@ -5,6 +5,7 @@ import list_helper from '../utils/list_helper.js'
 
 const { totalLikes } = list_helper
 
+// Ex: 4.4
 describe('total likes', () => {
   test('of empty list is 0', () => {
     assert.strictEqual(totalLikes([]), 0)

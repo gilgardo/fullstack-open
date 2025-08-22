@@ -4,7 +4,7 @@ import blogs from './blogs.js'
 import list_helper from '../utils/list_helper.js'
 
 const { favoriteBlog } = list_helper
-
+//Ex: 4.5
 describe('favorite blog', () => {
   test('of empty list is null', () => {
     assert.equal(favoriteBlog([]), null)

@@ -28,23 +28,3 @@ Content-Type: application/json
 ### Get all blogs
 GET {{blogsUrl}}
 
-### POST blog, POST user first
-POST  {{blogsUrl}}
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZXgiLCJpZCI6IjY4YTc3NDhhZWI3Yjc4MzE4ZmU0ODYxNSIsImlhdCI6MTc1NTgwNDg1Nn0.BkIg74FWT7Xaf_o_fgTJoMf2Ams1tCxvMvzf1lZ7GKA
-
-{
-  "title": "i like linux",
-  "author": "linus",
-  "url": "http://localhost:3001/api/blogs",
-  "likes": 4
-}
-
-### PUT blog POST user first
-PUT  {{blogsUrl}}/68a774d5eb7b78318fe4861a
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZXgiLCJpZCI6IjY4YTc3NDhhZWI3Yjc4MzE4ZmU0ODYxNSIsImlhdCI6MTc1NTgwNDg1Nn0.BkIg74FWT7Xaf_o_fgTJoMf2Ams1tCxvMvzf1lZ7GKA
-
-{
-  "likes": 10
-}

@@ -15,9 +15,9 @@ const resetDb = async () => {
   await User.deleteMany({})
 }
 
-const makeMockUser = async () => {
-  const passwordHash = await bcrypt.hash('sekret', 10)
-  const user = new User({ username: 'root', passwordHash })
+const makeMockUser = async (username, password) => {
+  const passwordHash = await bcrypt.hash(password, 10)
+  const user = new User({ username, passwordHash })
   await user.save()
 
   const userForToken = {
@@ -26,11 +26,11 @@ const makeMockUser = async () => {
   }
   const token = jwt.sign(userForToken, config.SECRET)
 
-  return { ...userForToken, token: `Bearer ${token}` }
+  return { userId: user._id, token: `Bearer ${token}` }
 }
 
-const initDb = async (userWithToken) => {
-  const user = await User.findById(userWithToken.id)
+const initDb = async (userId) => {
+  const user = await User.findById(userId)
   const blogsToInsert = initialBlogs.map((blog) => ({
     ...blog,
     user: user._id,

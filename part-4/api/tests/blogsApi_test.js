@@ -8,12 +8,15 @@ import helper from './api_helper.js'
 
 const BLOGS_URL = '/api/blogs'
 const api = supertest(app)
-let user
+let bearerToken
+const username = 'root'
+const password = 'sekret'
 
 beforeEach(async () => {
   await helper.resetDb()
-  user = await helper.makeMockUser()
-  await helper.initDb(user)
+  const { userId, token } = await helper.makeMockUser(username, password)
+  bearerToken = token
+  await helper.initDb(userId)
 })
 
 describe('getting blogs', () => {
@@ -51,7 +54,7 @@ describe('posting blogs', () => {
 
     const response = await api
       .post(BLOGS_URL)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -91,7 +94,7 @@ describe('posting blogs', () => {
 
     const response = await api
       .post(BLOGS_URL)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -119,17 +122,17 @@ describe('posting blogs', () => {
 
     await api
       .post(BLOGS_URL)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send(emptyTitle)
       .expect(400)
     await api
       .post(BLOGS_URL)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send(emptyUrl)
       .expect(400)
     await api
       .post(BLOGS_URL)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send(emptyEvery)
       .expect(400)
   })
@@ -144,7 +147,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`${BLOGS_URL}/${idToDelete}`)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -160,7 +163,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`${BLOGS_URL}/${nonExistingId}`)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .expect(404)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -178,7 +181,7 @@ describe('updating a blog', () => {
     const newLikes = 5
     const response = await api
       .put(`${BLOGS_URL}/${idToUpdate}`)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send({ likes: newLikes })
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -190,7 +193,7 @@ describe('updating a blog', () => {
     const newLikes = 5
     await api
       .put(`${BLOGS_URL}/${nonExistingId}`)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send({ likes: newLikes })
       .expect(404)
   })
@@ -199,7 +202,7 @@ describe('updating a blog', () => {
     const idToUpdate = blogsAtStart[0].id
     await api
       .put(`${BLOGS_URL}/${idToUpdate}`)
-      .set('Authorization', user.token)
+      .set('Authorization', bearerToken)
       .send({})
       .expect(400)
   })

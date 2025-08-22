@@ -6,11 +6,13 @@ import helper from './api_helper.js'
 import app from '../app.js'
 
 const USERS_URL = '/api/users'
+const username = 'root'
+const password = 'sekret'
 const api = supertest(app)
 
 beforeEach(async () => {
   await helper.resetDb()
-  await helper.makeMockUser()
+  await helper.makeMockUser(username, password)
 })
 
 // Ex: 4.16
@@ -39,7 +41,6 @@ describe('posting users', () => {
 
   test('fails with proper statuscode and message if username already taken', async () => {
     const usersAtStart = await helper.usersInDb()
-    const { username } = usersAtStart[0]
 
     const newUser = {
       username,
