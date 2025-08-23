@@ -1,7 +1,21 @@
-const LoginForm = ({ loginData, handleChange, handleLogin }) => {
+import { useState } from 'react'
+import handleChangeForm from './utils/handleChangeForm'
+
+const LoginForm = ({ handleLogin }) => {
+  const [loginData, setLoginData] = useState({ username: '', password: '' })
+  const handleChange = handleChangeForm(setLoginData)
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault()
+      await handleLogin(loginData)
+      setLoginData({ username: '', password: '' })
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const { username, password } = loginData
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleSubmit}>
       <div>
         <label>
           username

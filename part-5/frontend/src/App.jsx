@@ -1,57 +1,50 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import LoginForm from './components/LoginForm'
+import LoginForm from './LoginForm'
 import useStorage from './hooks/useStorage'
+import Home from './Home'
+import useMessage from './hooks/useMessage'
+import Message from './components/Message'
+import getErrorMessage from './utils/getErrorMessage'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useStorage('user_data')
-  const [loginData, setLoginData] = useState({ username: '', password: '' })
+  const [message, setMessage] = useMessage()
 
   if (user) blogService.setToken(user.token)
 
-  useEffect(() => {
-    const fetcBlogs = async () => {
-      const data = await blogService.getAll()
-      setBlogs(data)
+  const handleLogin = async (loginData) => {
+    try {
+      const data = await loginService.login(loginData)
+      setUser(data)
+      setMessage(null)
+    } catch (error) {
+      setMessage({
+        message: getErrorMessage(error, 'login failed'),
+        className: 'error',
+      })
     }
-    fetcBlogs()
-  }, [])
-
-  const handleChange = ({ target }) =>
-    setLoginData((prevData) => ({ ...prevData, [target.name]: target.value }))
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    const data = await loginService.login(loginData)
-    setUser(data)
-    setLoginData({ username: '', password: '' })
   }
 
-  if (user === null) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <LoginForm
-          loginData={loginData}
-          handleChange={handleChange}
-          handleLogin={handleLogin}
-        />
-      </div>
-    )
-  }
+  const handelLogOut = () => setUser(null)
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <h3>{user.name} logged in</h3>
-      <button onClick={() => setUser(null)}>Log Out</button>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </div>
+    <>
+      {user ? (
+        <Home
+          user={user}
+          handleLogOut={handelLogOut}
+          message={message}
+          setMessage={setMessage}
+        />
+      ) : (
+        <>
+          <h2>Log in to application</h2>
+          {message && <Message {...message} />}
+          <LoginForm handleLogin={handleLogin} />
+        </>
+      )}
+    </>
   )
 }
-
 export default App
