@@ -8,7 +8,8 @@ import Message from './components/Message'
 import getErrorMessage from './utils/getErrorMessage'
 
 const App = () => {
-  const [user, setUser] = useStorage('user_data')
+  const localStorageUserKey = 'user_data'
+  const [user, setUser] = useStorage(localStorageUserKey)
   const [message, setMessage] = useMessage()
 
   if (user) blogService.setToken(user.token)
