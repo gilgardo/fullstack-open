@@ -10,6 +10,7 @@ const Home = ({ user, handleLogOut, message, setMessage }) => {
   const [blogs, setBlogs] = useState([])
   const toggleRef = useRef(null)
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+
   const handlePostNewBlog = async (newBlog) => {
     try {
       const data = await blogService.create(newBlog)
@@ -27,7 +28,29 @@ const Home = ({ user, handleLogOut, message, setMessage }) => {
     }
   }
 
-  const handleFrontendUpdate = (updateFn) => setBlogs(updateFn)
+  // Ex: 5.8
+  const handleLike = async (blog) => {
+    try {
+      await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
+      setBlogs((prevBlogs) =>
+        prevBlogs.map((el) =>
+          el.id === blog.id ? { ...el, likes: el.likes + 1 } : el
+        )
+      )
+    } catch (error) {
+      console.log(getErrorMessage(error, error))
+    }
+  }
+
+  // Ex: 5.11
+  const handleDelete = async (id) => {
+    try {
+      await blogService.remove(id)
+      setBlogs((prevBlogs) => prevBlogs.filter((el) => el.id !== id))
+    } catch (error) {
+      console.log(getErrorMessage(error, error))
+    }
+  }
 
   useEffect(() => {
     const fetcBlogs = async () => {
@@ -55,7 +78,8 @@ const Home = ({ user, handleLogOut, message, setMessage }) => {
           key={blog.id}
           blog={blog}
           loggedUser={user.username}
-          handleFrontendUpdate={handleFrontendUpdate}
+          handleDelete={handleDelete}
+          handleLike={handleLike}
         />
       ))}
     </div>

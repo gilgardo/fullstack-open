@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
-import getErrorMessage from '../utils/getErrorMessage'
-const Blog = ({ blog, loggedUser, handleFrontendUpdate }) => {
+
+const Blog = ({ blog, loggedUser, handleDelete, handleLike }) => {
   const [isOpen, setIsOpen] = useState(false)
   const toggleOpen = () => setIsOpen(!isOpen)
 
@@ -12,48 +11,28 @@ const Blog = ({ blog, loggedUser, handleFrontendUpdate }) => {
     borderWidth: 1,
     marginBottom: 5,
   }
-  // Ex: 5.8
-  const handleLike = async () => {
-    try {
-      await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
-      handleFrontendUpdate((prevBlogs) =>
-        prevBlogs.map((el) =>
-          el.id === blog.id ? { ...el, likes: el.likes + 1 } : el
-        )
-      )
-    } catch (error) {
-      console.log(getErrorMessage(error, error))
-    }
-  }
 
-  // Ex: 5.11
-  const handleDelete = async () => {
+  const confirmDelete = () => {
     if (!confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
-    try {
-      await blogService.remove(blog.id)
-      handleFrontendUpdate((prevBlogs) =>
-        prevBlogs.filter((el) => el.id !== blog.id)
-      )
-    } catch (error) {
-      console.log(getErrorMessage(error, error))
-    }
+    handleDelete(blog.id)
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <div style={blogStyle} className="blog">
+      <div className="blog-header">
         {blog.title} {blog.author}{' '}
-        <button onClick={toggleOpen}> {isOpen ? 'Hide' : 'View'}</button>
       </div>
+      <button onClick={toggleOpen}> {isOpen ? 'Hide' : 'View'}</button>
       {isOpen && (
         <>
           <div>{blog.url}</div>
           <div>
-            likes {blog.likes} <button onClick={handleLike}>like</button>
+            likes {blog.likes}{' '}
+            <button onClick={() => handleLike(blog)}>like</button>
           </div>
           <div>{blog.user.username}</div>
           {loggedUser === blog.user.username && (
-            <button onClick={handleDelete}>remove</button>
+            <button onClick={confirmDelete}>remove</button>
           )}
         </>
       )}
