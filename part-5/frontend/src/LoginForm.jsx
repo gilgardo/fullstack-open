@@ -15,7 +15,7 @@ const LoginForm = ({ handleLogin }) => {
   }
   const { username, password } = loginData
   return (
-    <form onSubmit={handleSubmit}>
+    <form data-testid="login_form" onSubmit={handleSubmit}>
       <div>
         <label>
           username

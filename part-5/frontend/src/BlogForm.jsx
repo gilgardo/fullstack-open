@@ -18,7 +18,7 @@ const BlogForm = ({ handlePostNewBlog }) => {
   return (
     <>
       <h2>Create new</h2>
-      <form onSubmit={handleSubmit}>
+      <form data-testid="new_blog_form" onSubmit={handleSubmit}>
         <div>
           <label>
             title

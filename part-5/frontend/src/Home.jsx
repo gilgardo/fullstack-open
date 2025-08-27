@@ -69,7 +69,7 @@ const Home = ({ user, handleLogOut, message, setMessage }) => {
         <button onClick={handleLogOut}>Log Out</button>
       </div>
       <br />
-      <Togglable buttonLabel="a new Blog" ref={toggleRef}>
+      <Togglable buttonLabel="new blog" ref={toggleRef}>
         <BlogForm handlePostNewBlog={handlePostNewBlog} />
       </Togglable>
       <br />
