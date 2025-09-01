@@ -16,7 +16,7 @@ const Blog = ({ blog, loggedUser, handleDelete, handleLike }) => {
     if (!confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
     handleDelete(blog.id)
   }
-
+  console.log(loggedUser)
   return (
     <div style={blogStyle} className="blog">
       <div className="blog-header">

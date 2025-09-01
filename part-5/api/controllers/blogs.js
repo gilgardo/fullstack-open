@@ -9,6 +9,27 @@ blogsRouter.get('/', async (_, response) => {
   return response.json(blogs)
 })
 
+// Ex: 4.14
+blogsRouter.put('/:id', async (request, response) => {
+  const { id } = request.params
+  const { likes } = request.body
+
+  if (likes === undefined) {
+    return response.status(400).json({ error: 'no likes received' })
+  }
+
+  const targetBlog = await Blog.findById(id)
+
+  if (!targetBlog) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+
+  targetBlog.likes = likes
+  const updatedBlog = await targetBlog.save()
+
+  return response.status(200).json(updatedBlog)
+})
+
 blogsRouter.use(middleware.userExtractor)
 
 blogsRouter.post('/', async (request, response) => {
@@ -21,10 +42,11 @@ blogsRouter.post('/', async (request, response) => {
     user: user._id,
     likes: likes ? likes : 0,
   })
-  const savedBlog = await blog.save()
+  let savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
+  savedBlog = await savedBlog.populate('user', { username: 1, name: 1 })
   return response.status(201).json(savedBlog)
 })
 
@@ -43,34 +65,6 @@ blogsRouter.delete('/:id', async (request, response) => {
   }
   await targetBlog.deleteOne()
   return response.status(204).end()
-})
-
-// Ex: 4.14
-blogsRouter.put('/:id', async (request, response) => {
-  const { id } = request.params
-  const { likes } = request.body
-  const user = request.user
-
-  if (likes === undefined) {
-    return response.status(400).json({ error: 'no likes received' })
-  }
-
-  const targetBlog = await Blog.findById(id)
-
-  if (!targetBlog) {
-    return response.status(404).json({ error: 'blog not found' })
-  }
-
-  if (targetBlog.user.toString() !== user._id.toString()) {
-    return response
-      .status(403)
-      .json({ error: 'not authorized to update this blog' })
-  }
-
-  targetBlog.likes = likes
-  const updatedBlog = await targetBlog.save()
-
-  return response.status(200).json(updatedBlog)
 })
 
 export default blogsRouter
