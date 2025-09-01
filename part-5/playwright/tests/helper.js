@@ -14,4 +14,11 @@ const createBlog = async (page, content) => {
   await page.getByRole('button', { name: 'create' }).click()
 }
 
-export { loginWith, createBlog }
+const getNthBlog = (nth, page, blogs) => {
+  const blog = page
+    .getByText(`${blogs[nth].title} ${blogs[nth].author}`)
+    .locator('..')
+  return blog
+}
+
+export { loginWith, createBlog, getNthBlog }
