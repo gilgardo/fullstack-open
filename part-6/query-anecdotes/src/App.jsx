@@ -7,6 +7,7 @@ import { useMessageDispatch } from './MessageHoks'
 const App = () => {
   const queryClient = useQueryClient()
 
+  //Ex 6.22
   const { mutate: vote } = useMutation({
     mutationFn: (anecdote) =>
       anecdotesService.update({ ...anecdote, votes: anecdote.votes + 1 }),
@@ -19,7 +20,7 @@ const App = () => {
       )
     },
   })
-
+  //Ex 6.20
   const { data: anecdotes } = useQuery({
     queryKey: ['anecdotes'],
     queryFn: anecdotesService.getAll,

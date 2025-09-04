@@ -1,0 +1,57 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom-hooks are awesome!"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "loll is good",
+      "id": 3
+    },
+    {
+      "content": "a test",
+      "id": 4
+    },
+    {
+      "content": "a test",
+      "id": 5
+    },
+    {
+      "content": "a test",
+      "id": 6
+    },
+    {
+      "content": "the key is missing",
+      "id": 7
+    },
+    {
+      "content": "the key is missing",
+      "id": 8
+    },
+    {
+      "content": "first time",
+      "id": 9
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "mluukkai",
+      "number": "040-5483923"
+    },
+    {
+      "id": 2,
+      "name": "hellas",
+      "number": "012-123123"
+    },
+    {
+      "name": "ale",
+      "number": "030-304959",
+      "id": 3
+    }
+  ]
+}
