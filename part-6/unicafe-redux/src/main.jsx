@@ -6,7 +6,7 @@ import reducer from './reducer'
 
 const store = createStore(reducer)
 
-// Ex 6.2
+// Ex 6.2 
 const App = () => {
  const good = () => {
   store.dispatch({ type: 'GOOD' })
