@@ -1,0 +1,33 @@
+@blogsUrl = http://localhost:3001/api/blogs
+@usersUrl = http://localhost:3001/api/users
+@loginUrl = http://localhost:3001/api/login
+
+### Get all users
+GET {{usersUrl}}
+
+
+### POST user
+POST  {{usersUrl}}
+Content-Type: application/json
+
+{
+  "username": "test",
+  "name": "tester",
+  "password": "test"
+}
+
+### Login
+POST {{loginUrl}}
+Content-Type: application/json
+
+{
+  "username": "alex",
+  "password": "gino"
+}
+
+### Get all blogs
+GET {{blogsUrl}}
+
+
+
+

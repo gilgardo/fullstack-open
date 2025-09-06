@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import Blog from '../models/blogs.js'
+import Comment from '../models/comments.js'
 import middleware from '../utils/middleware.js'
 
 const blogsRouter = Router()
@@ -7,6 +8,41 @@ const blogsRouter = Router()
 blogsRouter.get('/', async (_, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   return response.json(blogs)
+})
+
+blogsRouter.get('/:id/comments', async (request, response) => {
+  const { id } = request.params
+  const blog = await Blog.findById(id).populate('comments', { blog: 0 })
+  if (!blog) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+  return response.json(blog.comments)
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { id } = request.params
+  const { content } = request.body
+
+  if (!content) {
+    return response.status(400).json({ error: 'no content received' })
+  }
+
+  const targetBlog = await Blog.findById(id)
+  if (!targetBlog) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+
+  const comment = new Comment({
+    content,
+    blog: targetBlog._id,
+  })
+
+  const savedComment = await comment.save()
+
+  targetBlog.comments = targetBlog.comments.concat(savedComment._id)
+  await targetBlog.save()
+
+  return response.status(201).json(savedComment)
 })
 
 // Ex: 4.14
@@ -19,11 +55,9 @@ blogsRouter.put('/:id', async (request, response) => {
   }
 
   const targetBlog = await Blog.findById(id)
-
   if (!targetBlog) {
     return response.status(404).json({ error: 'blog not found' })
   }
-
   targetBlog.likes = likes
   const updatedBlog = await targetBlog.save()
   const populatedBlog = await updatedBlog.populate('user', {

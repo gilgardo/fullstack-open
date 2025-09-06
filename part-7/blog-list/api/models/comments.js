@@ -1,19 +1,13 @@
 import mongoose from 'mongoose'
 
-const blogSchema = mongoose.Schema({
-  title: {
+const commentSchema = mongoose.Schema({
+  content: {
     type: String,
     required: true,
   },
-  author: String,
-  url: {
-    type: String,
-    required: true,
-  },
-  likes: Number,
-  user: {
+  blog: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Blog',
   },
   comments: [
     {
@@ -23,9 +17,9 @@ const blogSchema = mongoose.Schema({
   ],
 })
 
-const Blog = mongoose.model('Blog', blogSchema)
+const Comment = mongoose.model('Comment', commentSchema)
 
-blogSchema.set('toJSON', {
+commentSchema.set('toJSON', {
   transform: (_, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
@@ -33,4 +27,4 @@ blogSchema.set('toJSON', {
   },
 })
 
-export default Blog
+export default Comment

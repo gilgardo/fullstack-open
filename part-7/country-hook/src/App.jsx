@@ -14,7 +14,7 @@ const useField = (type) => {
     onChange,
   }
 }
-
+//Ex: 7.7
 const useCountry = (name) => {
   const BASE_URL = 'https://studies.cs.helsinki.fi/restcountries/api/name'
   const [country, setCountry] = useState(null)

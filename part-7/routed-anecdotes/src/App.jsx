@@ -101,6 +101,7 @@ const CreateNew = ({ addNew, setMessage }) => {
 
   const fields = [content, author, info]
   const resetAll = () => fields.forEach((field) => field.reset())
+
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
