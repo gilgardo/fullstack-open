@@ -9,9 +9,7 @@
     "dev": "cross-env NODE_ENV=development node --watch index.js",
     "mongo:up": "docker compose up -d mongo",
     "mongo:down": "docker compose down",
-    "test": "npm run mongo:up && wait-on tcp:27017 && cross-env NODE_ENV=test node --test --test-concurrency=1 && npm run mongo:down",
-    "lint": "eslint .",
-    "start:test": "cross-env NODE_ENV=test node --watch index.js"
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",

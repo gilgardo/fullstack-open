@@ -6,7 +6,6 @@ import middleware from './utils/middleware.js'
 import blogsRouter from './controllers/blogs.js'
 import usersRouter from './controllers/users.js'
 import loginRouter from './controllers/login.js'
-import testingRouter from './controllers/testing.js'
 
 const app = express()
 
@@ -22,10 +21,6 @@ try {
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
-
-if (process.env.NODE_ENV === 'test') {
-  app.use('/api/testing', testingRouter)
-}
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)

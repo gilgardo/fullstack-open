@@ -1,45 +1,72 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Card, Button, Collapse, Stack } from 'react-bootstrap'
 
 const Blog = ({ blog, loggedUser, handleDelete, handleLike }) => {
   const [isOpen, setIsOpen] = useState(false)
   const toggleOpen = () => setIsOpen(!isOpen)
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
-
   const confirmDelete = () => {
-    if (!confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
+    if (!window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`))
+      return
     handleDelete(blog.id)
   }
 
   return (
-    <div style={blogStyle} className="blog">
-      <div className="blog-header">
-        <Link to={`/blogs/${blog.id}`}>
-          {blog.title} {blog.author}{' '}
-        </Link>
-      </div>
-      <button onClick={toggleOpen}> {isOpen ? 'Hide' : 'View'}</button>
-      {isOpen && (
-        <>
-          <div>{blog.url}</div>
+    <Card className="mb-3 shadow-sm">
+      <Card.Body>
+        <div className="d-flex justify-content-between align-items-center">
           <div>
-            likes {blog.likes}{' '}
-            <button onClick={() => handleLike(blog)}>like</button>
+            <Card.Title>
+              <Link to={`/blogs/${blog.id}`} className="text-decoration-none">
+                {blog.title}
+              </Link>
+            </Card.Title>
+            <Card.Subtitle className="text-muted">
+              By {blog.author}
+            </Card.Subtitle>
           </div>
-          <div>{blog.user.username}</div>
-          {loggedUser === blog.user.username && (
-            <button onClick={confirmDelete}>remove</button>
-          )}
-        </>
-      )}
-    </div>
+          <Button variant="outline-secondary" size="sm" onClick={toggleOpen}>
+            {isOpen ? 'Hide' : 'View'}
+          </Button>
+        </div>
+
+        <Collapse in={isOpen}>
+          <div className="mt-3">
+            <p>
+              <strong>URL:</strong> {blog.url}
+            </p>
+
+            <div className="d-flex align-items-center mb-5">
+              <strong className="me-2">Likes:</strong>
+              <span>{blog.likes}</span>
+              <Button
+                variant="primary"
+                size="sm"
+                className="ms-2"
+                onClick={() => handleLike(blog)}
+              >
+                Like
+              </Button>
+            </div>
+
+            <Stack direction="horizontal">
+              <span className="text-muted">Posted by {blog.user.username}</span>
+              {loggedUser === blog.user.username && (
+                <Button
+                  variant="outline-danger"
+                  className="ms-auto"
+                  size="sm"
+                  onClick={confirmDelete}
+                >
+                  Remove
+                </Button>
+              )}
+            </Stack>
+          </div>
+        </Collapse>
+      </Card.Body>
+    </Card>
   )
 }
 

@@ -3,6 +3,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { updateBlog } from '../reducers/blogsReducer'
 import { createComment, fetchAllComments } from '../reducers/commentsReducer'
 import { useEffect, useState } from 'react'
+import { Card, Button, Form, ListGroup } from 'react-bootstrap'
 
 const BlogDettail = () => {
   const { id } = useParams()
@@ -15,7 +16,7 @@ const BlogDettail = () => {
 
   useEffect(() => {
     dispatch(fetchAllComments(id))
-  }, [id])
+  }, [id, dispatch])
 
   const handleLike = () => dispatch(updateBlog(blog))
   const handleSubmit = (e) => {
@@ -24,38 +25,55 @@ const BlogDettail = () => {
     setContent('')
   }
 
+  if (!blog) return <Navigate to="/" />
+
   return (
-    <div>
-      {blog ? (
-        <>
-          <h2>{blog.title}</h2>
-          <a href={blog.url}>{blog.url}</a>
-          <div>
-            {' '}
-            {blog.likes} likes <button onClick={handleLike}>like</button>
-          </div>
-          <div>Added by {blog.user.name}</div>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <input
-                type="text"
-                name="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-              />
-              <button type="submit">add comment</button>
-            </div>
-          </form>
-          <ul>
-            {comments.map((comment) => (
-              <li key={comment.id}>{comment.content}</li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <Navigate to="/" />
-      )}
-    </div>
+    <Card className="mb-3 shadow-sm">
+      <Card.Body>
+        <Card.Title>{blog.title}</Card.Title>
+        <Card.Subtitle className="mb-2 text-muted">
+          {blog.user.name}
+        </Card.Subtitle>
+
+        <Card.Text>
+          <a href={blog.url} target="_blank" rel="noopener noreferrer">
+            {blog.url}
+          </a>
+        </Card.Text>
+
+        <div className="d-flex align-items-center mb-3 gap-2">
+          <span>{blog.likes} likes</span>
+          <Button variant="primary" size="sm" onClick={handleLike}>
+            Like
+          </Button>
+        </div>
+
+        <hr />
+
+        <h5>Comments</h5>
+        <Form onSubmit={handleSubmit} className="mb-3">
+          <Form.Group className="d-flex gap-2">
+            <Form.Control
+              type="text"
+              name="content"
+              value={content}
+              placeholder="Add a comment"
+              onChange={(e) => setContent(e.target.value)}
+              required
+            />
+            <Button type="submit" variant="success">
+              Add
+            </Button>
+          </Form.Group>
+        </Form>
+
+        <ListGroup variant="flush">
+          {comments.map((comment) => (
+            <ListGroup.Item key={comment.id}>{comment.content}</ListGroup.Item>
+          ))}
+        </ListGroup>
+      </Card.Body>
+    </Card>
   )
 }
 
